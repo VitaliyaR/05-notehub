@@ -12,7 +12,7 @@ import NoteForm from "../NoteForm/NoteForm";
 import Modal from "../Modal/Modal";
 import SearchBox from "../SearchBox/SearchBox";
 import Loader from "../Loader/Loader";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import ErrorMessage from "../Error/ErrorMessage";
 
 
 export default function App() {
