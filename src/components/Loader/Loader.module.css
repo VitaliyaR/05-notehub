@@ -1,6 +1,45 @@
-.loaderWrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - 80px);
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.orbit {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  animation: spin 1s linear infinite;
+}
+
+.planet {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: #ff6b6b;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  margin: -8px 0 0 -8px;
+  transform-origin: 40px 0;
+}
+
+.planet:nth-child(1) {
+  transform: rotate(0deg) translateX(40px);
+  background-color: #f6c90e;
+}
+.planet:nth-child(2) {
+  transform: rotate(120deg) translateX(40px);
+  background-color: #4dd599;
+}
+.planet:nth-child(3) {
+  transform: rotate(240deg) translateX(40px);
+  background-color: #3b82f6;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
   }
+}
+
