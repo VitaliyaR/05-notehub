@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
 
-import { fetchNotes } from "../../services/noteService";
 import type { NotesResponse } from "../../services/noteService";
+import { fetchNotes } from "../../services/noteService";
 
 import Pagination from "../Pagination/Pagination";
 import NoteList from "../NoteList/NoteList";
@@ -18,7 +18,6 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const updateSearchQuery = useDebouncedCallback((value: string) => {
     setSearchQuery(value);
@@ -30,7 +29,7 @@ export default function App() {
     updateSearchQuery(value);
   };
 
-  const { data, isLoading, isError, isSuccess } = useQuery<NotesResponse>({
+  const { data, isSuccess, isLoading, isError } = useQuery<NotesResponse>({
     queryKey: ["notes", searchQuery, currentPage],
     queryFn: () =>
       fetchNotes({
@@ -40,6 +39,9 @@ export default function App() {
     placeholderData: keepPreviousData,
   });
 
+  const totalPages = data?.totalPages ?? 0;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -47,10 +49,10 @@ export default function App() {
     <div className={css.app}>
       <header className={css.toolbar}>
         <SearchBox value={searchInput} onSearch={handleSearch} />
-        {isSuccess && data.totalPages > 1 && (
+        {isSuccess && totalPages > 1 && (
           <Pagination
             page={currentPage}
-            total={data.totalPages}
+            total={totalPages}
             onChange={setCurrentPage}
           />
         )}
@@ -61,9 +63,7 @@ export default function App() {
 
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
-      {isSuccess && data.results.length > 0 && (
-        <NoteList notes={data.results} />
-      )}
+      {isSuccess && data.notes.length > 0 && <NoteList notes={data.notes} />}
       {isModalOpen && (
         <Modal onClose={closeModal}>
           <NoteForm onSuccess={closeModal} onCancel={closeModal} />

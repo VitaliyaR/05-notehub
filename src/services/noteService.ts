@@ -2,7 +2,7 @@ import axios from "axios";
 import type { Note, NewNoteData } from "../types/note";
 
 const API_URL = `https://notehub-public.goit.study/api`;
-const TOKEN = import.meta.env.VITE_NOTEHUB_TOKEN; // ✅ ПРАВИЛЬНО
+const TOKEN = import.meta.env.VITE_NOTEHUB_TOKEN;
 
 export interface NotesResponse {
   notes: Note[];
@@ -33,7 +33,7 @@ export async function fetchNotes({
       sortBy,
     },
     headers: {
-      Authorization: `Bearer ${TOKEN}`, // ✅ І тут — використовуй TOKEN
+      Authorization: `Bearer ${TOKEN}`,
     },
   });
   return response.data;
