@@ -18,42 +18,57 @@ interface FetchNotesParams {
 }
 
 export async function fetchNotes({
-  search,
+  search = "",
   tag,
-  page,
-  perPage,
-  sortBy,
-}: FetchNotesParams): Promise<NotesResponse> {
-  const response = await axios.get<NotesResponse>(`${API_URL}/notes`, {
-    params: {
-      search,
-      tag,
-      page,
-      perPage,
-      sortBy,
-    },
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  });
-  return response.data;
+  page = 1,
+  perPage = 12,
+  sortBy = "createdAt",
+}: FetchNotesParams = {}): Promise<NotesResponse> {
+  try {
+    const response = await axios.get<NotesResponse>(`${API_URL}/notes`, {
+      params: {
+        search,
+        tag,
+        page,
+        perPage,
+        sortBy,
+      },
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch notes:", error);
+    throw error;
+  }
 }
 
 export async function createNote(data: NewNoteData): Promise<Note> {
-  const response = await axios.post<Note>(`${API_URL}/notes`, data, {
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-      "Content-Type": "application/json",
-    },
-  });
-  return response.data;
+  try {
+    const response = await axios.post<Note>(`${API_URL}/notes`, data, {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to create note:", error);
+    throw error;
+  }
 }
 
 export async function deleteNote(noteId: string | number): Promise<Note> {
-  const response = await axios.delete<Note>(`${API_URL}/notes/${noteId}`, {
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  });
-  return response.data;
+  try {
+    const response = await axios.delete<Note>(`${API_URL}/notes/${noteId}`, {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to delete note:", error);
+    throw error;
+  }
 }
