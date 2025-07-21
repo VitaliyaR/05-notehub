@@ -14,7 +14,6 @@ interface FetchNotesParams {
   tag?: string;
   page?: number;
   perPage?: number;
-  sortBy?: "createdAt" | "updatedAt" | "title";
 }
 
 export async function fetchNotes({
@@ -22,29 +21,36 @@ export async function fetchNotes({
   tag,
   page = 1,
   perPage = 12,
-  sortBy = "createdAt",
 }: FetchNotesParams = {}): Promise<NotesResponse> {
+  if (!TOKEN) {
+    throw new Error("Authorization token is missing");
+  }
+
   try {
     const response = await axios.get<NotesResponse>(`${API_URL}/notes`, {
       params: {
-        search,
-        tag,
+        ...(search ? { search } : {}),
+        ...(tag ? { tag } : {}),
         page,
         perPage,
-        sortBy,
       },
       headers: {
         Authorization: `Bearer ${TOKEN}`,
       },
     });
+
     return response.data;
   } catch (error) {
-    console.error("Failed to fetch notes:", error);
+    console.error("❌ Failed to fetch notes:", error);
     throw error;
   }
 }
 
 export async function createNote(data: NewNoteData): Promise<Note> {
+  if (!TOKEN) {
+    throw new Error("Authorization token is missing");
+  }
+
   try {
     const response = await axios.post<Note>(`${API_URL}/notes`, data, {
       headers: {
@@ -54,12 +60,16 @@ export async function createNote(data: NewNoteData): Promise<Note> {
     });
     return response.data;
   } catch (error) {
-    console.error("Failed to create note:", error);
+    console.error("❌ Failed to create note:", error);
     throw error;
   }
 }
 
 export async function deleteNote(noteId: string | number): Promise<Note> {
+  if (!TOKEN) {
+    throw new Error("Authorization token is missing");
+  }
+
   try {
     const response = await axios.delete<Note>(`${API_URL}/notes/${noteId}`, {
       headers: {
@@ -68,7 +78,7 @@ export async function deleteNote(noteId: string | number): Promise<Note> {
     });
     return response.data;
   } catch (error) {
-    console.error("Failed to delete note:", error);
+    console.error("❌ Failed to delete note:", error);
     throw error;
   }
 }
